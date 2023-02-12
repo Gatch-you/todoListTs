@@ -71,8 +71,10 @@ function App() {
     const list = []
     list.push(todos);
     storage.todoList = JSON.stringify(list);
+    //ストレージに入力を格納し保存する。でもなぜか入力直後のものが反映されない。
 
-
+    console.log(todos);
+    //コンソールに出力。確認用
 
     setInputValue("");
     //作成ののちはテキストボックスを空にしたいからこれを書く
@@ -87,7 +89,7 @@ function App() {
     const newTodos = todos.map((todo) => {
       if (todo.id === id) {
         todo.inputValue = inputValue;
-        //   ↑前のinVal     ↑編集で打ち込んだinval
+        //   ↑前のinVal     ↑編集で打ち込んだinvalを代入
       }
       //todo.idと元からのidのnumberが一致した時のみ編集を可能にする処理
       return todo;
