@@ -1,6 +1,15 @@
 import React from 'react';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+// const getTodosFromLS = () => {
+//   const data = localStorage.getItem('todoList');
+//   if (data) {
+//     return JSON.parse(data)
+//   } else {
+//     return[];
+//   };
+// }
 
 function App() {
 
@@ -20,11 +29,22 @@ function App() {
   };
   //↑入力された型指定のオブジェクト
   //上のconst [inputValue, setInputValue] = useState("");からこのTodoにinputValueへ渡される。
+  const storage = localStorage
+  let list = [];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const json = storage.todoList;
+    if (json == undefined) {
+      return;
+    }
+    list = JSON.parse(json);
+    console.log(list);
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //console.log(e.target.value);
+    console.log(e.target.value);
     setInputValue(e.target.value);
-    //ブラウザのコンソールからe.target.valueを見て持ってくる。だいたいこれらしい。
+    //ブラウザのコンソールからe.target.valueを見つけて持ってくる。だいたいこれらしい。
     //持ってきて7行目のinputValueに格納される。
   };
 
@@ -35,17 +55,33 @@ function App() {
     const newTodo: Todo = {
       inputValue: inputValue,
       id: todos.length,
-      checked: false
+      checked: false,
     };
     //↑Todoの型をコピーして新しく作成していく。
     //inputValueは7行めに取得したもの idはユニークなものが良いが、今回は簡単なものなので.lengthにしている。
 
+    if ( inputValue === "") {
+      return;
+    } else {
     setTodos([newTodo, ...todos]);
+    };
     //コピーしたnewTodoの内容を配列として入れていく。(スプレット構文？)
+
+    const storage = localStorage;
+    const list = []
+    list.push(todos);
+    storage.todoList = JSON.stringify(list);
+
+
 
     setInputValue("");
     //作成ののちはテキストボックスを空にしたいからこれを書く
+    //なぜか動かない？
   };
+
+  // useEffect(() => {
+  //   localStorage.setItem('Todos', JSON.stringify(todos));
+  // },[todos]);
 
   const handleEdit = (id: number, inputValue: string) => {
     const newTodos = todos.map((todo) => {
@@ -80,13 +116,17 @@ function App() {
     <div className="App">
       <div>
         <h1>Todo List with Typescript</h1>
-        <form onSubmit = {(e) => handleSubmit(e)}>
-          <label className='inputText'>
+        <form 
+          onSubmit = {(e) => handleSubmit(e)}>
+          <label 
+            className='inputText'>
             <input 
               type = "text" 
               onChange = {(e) => handleChange(e)} 
               // eventのe        handlechangeは上で自分で定義した関数
-              className = "inputText" />
+              className = "inputText" 
+              placeholder="Write your tasks..."/>
+              
           </label>
           <input type = "submit" value = "作成" className = "submitButton" />
         </form>
