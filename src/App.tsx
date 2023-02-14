@@ -2,14 +2,14 @@ import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
 
-// const getTodosFromLS = () => {
-//   const data = localStorage.getItem('todoList');
-//   if (data) {
-//     return JSON.parse(data)
-//   } else {
-//     return[];
-//   };
-// }
+const getTodosFromLS = () => {
+  const data = localStorage.getItem('todoList');
+  if (data) {
+    return JSON.parse(data)
+  } else {
+    return[];
+  };
+}
 
 function App() {
 
@@ -60,10 +60,21 @@ function App() {
     //↑Todoの型をコピーして新しく作成していく。
     //inputValueは7行めに取得したもの idはユニークなものが良いが、今回は簡単なものなので.lengthにしている。
 
+    // forEach
+    let isValid = true
+    todos.forEach(todo => {
+      if (todo.inputValue == inputValue) {
+        isValid = false
+      }
+    })
+    if (!isValid) {
+      return
+    }
+
     if ( inputValue === "") {
       return;
     } else {
-    setTodos([newTodo, ...todos]);
+    setTodos([newTodo, ...todos]); // [newTodo, ...todos] => todos
     };
     //コピーしたnewTodoの内容を配列として入れていく。(スプレット構文？)
 
@@ -71,7 +82,7 @@ function App() {
     const list = []
     list.push(todos);
     storage.todoList = JSON.stringify(list);
-    //ストレージに入力を格納し保存する。でもなぜか入力直後のものが反映されない。
+    //ブラウザストレージに入力を格納し保存する。でもなぜか入力直後のものが反映されない。
 
     console.log(todos);
     //コンソールに出力。確認用
